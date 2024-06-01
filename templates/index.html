@@ -1,0 +1,209 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FrameFusion</title>
+    <!-- Bootstrap CSS CDN link -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Link to Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+         body {
+            background-image: url('/static/background_image.jpg');
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 40px; /* Ensure space for acknowledgment text */
+            position: relative;
+        }
+
+        /* Apply styles to the framefusion box */
+        #framefusion-box {
+            background-color: #FF0000; /* Red color */
+            padding: 10px 20px; /* Add padding for space around the text */
+            border-radius: 10px; /* Rounded corners */
+            margin-bottom: 20px; /* Add margin to create space between the box and other content */
+            display: inline-block; /* Display as inline-block to fit content size */
+        }
+
+        /* Apply Roboto font to the heading inside the framefusion box */
+        #framefusion-box h1 {
+            font-family: 'Roboto', sans-serif;
+            color: #FFFFFF; /* White color */
+            margin: 0; /* Remove default margin to prevent spacing */
+        }
+
+        /* Acknowledgment text styles */
+        .acknowledgment {
+            color: #ffffff; /* White color */
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+            padding: 10px 20px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* Instruction text styles */
+        .instruction-section {
+            margin-bottom: 20px; /* Add margin to separate from other content */
+            padding: 10px; /* Add padding for space around the text */
+            background-color: #454545; /* Grey background */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .instruction-text {
+            color: #00ff00; /* Green text color */
+        }
+
+        /* Additional styles for the college logo */
+        #college-logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 250px; /* Adjust width as needed */
+            height: auto;
+        }
+
+        /* Styles for the college name */
+        
+        
+    </style>
+</head>
+<body>
+    <!-- College logo -->
+    <img id="college-logo" src="{{ url_for('static', filename='college_logo.png') }}" alt="College Logo">
+
+    
+
+    <video width="320" height="240" muted autoplay>
+        <source src="{{ summarized_video }}" type="video/mp4">
+        <source src="{{ summarized_detection_video }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div id="container">
+        <!-- FrameFusion box -->
+        <div id="framefusion-box">
+            <h1>FrameFusion</h1>
+        </div>
+        
+        <!-- Instruction section -->
+        <div class="instruction-section">
+            <p class="instruction-text">
+                To achieve better accuracy:<br>
+                - If the video length is shorter, consider setting a lower threshold.<br>
+                - If the video length is longer, consider setting a higher threshold.
+            </p>
+        </div>
+
+        {% if not summarized_video %}
+        <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" id="videoFile" name="file" accept="video/*" required>
+            <!-- Slider for threshold selection -->
+            <label for="threshold">Select Threshold for Summarization:</label>
+            <input type="range" min="5" max="100" value="20" class="slider" id="threshold" name="threshold" style="margin-right: 10px; background-color: #007bff;">
+            <span id="thresholdValue">20</span>
+            <button type="submit" class="btn btn-success" style="margin-left: 10px;">Upload Video</button>
+        </form>
+        
+        {% endif %}
+        {% if summarized_detection_video %}
+            <div class="video-container">
+                <h2>Summarized Video with Human Detection:</h2>
+                <video id="summarized-detection-video" controls>
+                    <source src="{{ summarized_detection_video }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <br>
+                <a href="/download/{{ summarized_detection_video }}" class="btn btn-primary">Download Summarized Video with Human Detection</a>
+            </div>
+        {% endif %}
+        {% if summarized_video %}
+            <div class="video-container">
+                <h2>Summarized Video:</h2>
+                <video id="summarized-video" controls>
+                    <source src="{{ summarized_video }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <br>
+                <a href="/download/{{ summarized_video }}" class="btn btn-primary">Download Summarized Video</a>
+            </div>
+        {% endif %}
+        {% if original_video_length %}
+        <div class="stats-container">
+            <div class="card">
+                <div class="card-header">
+                    Video Stats
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Original Video Length: {{ original_video_length }}</p>
+                    <p class="card-text">Summarized Video Length: {{ summarized_video_length }}</p>
+                    <p class="card-text">Number of Unique Frames: {{ unique_frames }}</p>
+                    <p class="card-text">Number of Similar Frames: {{ similar_frames }}</p>
+                    <p class="card-text">Total Number of Frames: {{ total_frames }}</p>
+                    {% if time_saved %}
+                    <!-- New sticker-like shape for time saved -->
+                    <div class="time-saved-sticker">
+                        Time Saved: {{ time_saved }} seconds
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+
+    <!-- Acknowledgment text -->
+    <p class="acknowledgment">This project is done under the guidance of Prof. Hina Nazneen and project members Nimmi and Omkar.</p>
+
+    <!-- JavaScript code to update the video source when a file is selected -->
+    <script>
+        // Wait for the document to be fully loaded before executing JavaScript
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the file input element
+            var videoFile = document.getElementById('videoFile');
+    
+            // Check if the element exists before adding the event listener
+            if (videoFile) {
+                // Listen for the 'change' event
+                videoFile.addEventListener('change', function() {
+                    // Get the selected file
+                    var file = this.files[0];
+    
+                    // Create a URL for the file
+                    var url = URL.createObjectURL(file);
+    
+                    // Get the video players
+                    var summarizedVideoPlayer = document.getElementById('summarized-video');
+                    var summarizedDetectionVideoPlayer = document.getElementById('summarized-detection-video');
+    
+                    // Update the video sources
+                    summarizedVideoPlayer.src = url;
+                    summarizedDetectionVideoPlayer.src = url; // Assuming same source for both initially
+                });
+            }
+    
+            // Get the threshold slider element
+            var thresholdSlider = document.getElementById('threshold');
+    
+            // Check if the element exists before adding the oninput event handler
+            if (thresholdSlider) {
+                // Slider interaction
+                thresholdSlider.oninput = function() {
+                    var thresholdValue = document.getElementById('thresholdValue');
+                    if (thresholdValue) {
+                        thresholdValue.innerHTML = this.value;
+                    }
+                };
+            }
+        });
+    </script>
+</body>
+</html>

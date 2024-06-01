@@ -1,0 +1,138 @@
+/* style.css */
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    margin-top: 0px;
+    margin-right: 0;
+    margin-bottom: 40px;
+    margin-left: 0;
+    padding: 0;
+    text-align: center;
+    color: #ffc107;
+    background-color: #15202B;
+}
+
+/* Container styles */
+
+#container {
+    margin-top: 2px; /* Further reduced margin to move the panel higher */
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    border-radius: 10px;
+}
+
+/* Acknowledgment text styles */
+.acknowledgment {
+    color: #fff;
+    font-size: 14px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Custom file input button styles */
+.custom-file-input {
+    background-color: #1DA1F2; /* Dark blue accent color */
+    color: white;
+    padding: 10px 20px; /* Set padding */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-input:hover {
+    background-color: #0D5E8D; /* Darker blue on hover */
+}
+
+/* Dropdown button styles */
+.dropdown-toggle {
+    background-color: #1DA1F2; /* Dark blue accent color */
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+    background-color: #0D5E8D; /* Darker blue on hover */
+}
+
+/* Submit button styles */
+.btn-success {
+    background-color: #1DA1F2; /* Dark blue accent color */
+    color: white;
+    padding: 10px 20px; /* Set padding */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #0D5E8D; /* Darker blue on hover */
+}
+
+.stats-container {
+    background-color: #4545457a; /* Black background */
+    color: #00ff00; /* Green text color */
+    border-radius: 10px;
+    margin-top: 20px; /* Add margin to separate from other content */
+    padding: 10px;
+}
+
+.stats-container .card-header {
+    background-color: #333; /* Darker grey for card header */
+    color: #e5ff00; /* Green text color */
+    border-bottom: none; /* Remove bottom border */
+}
+
+.stats-container .card-body {
+    color: #28a745;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1.25rem;
+}
+
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #151206;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+}
+
+.time-saved-sticker {
+    position: relative;
+    width: fit-content;
+    padding: 10px;
+    background-color: #007bff; /* Blue color */
+    color: white;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.time-saved-sticker::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: calc(50% - 10px); /* Adjust as needed */
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #007bff transparent; /* Blue color */
+}
